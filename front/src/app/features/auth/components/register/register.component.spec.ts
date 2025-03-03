@@ -1,6 +1,12 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  ComponentFixture,
+  fakeAsync,
+  flush,
+  TestBed,
+} from '@angular/core/testing';
+
+import { ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,25 +15,42 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { expect } from '@jest/globals';
 
 import { RegisterComponent } from './register.component';
+import { RegisterRequest } from '../../interfaces/registerRequest.interface';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { of, throwError } from 'rxjs';
+import { RouterTestingModule } from '@angular/router/testing';
+import { By } from '@angular/platform-browser';
+import { registerRequest } from 'src/app/mockdata/auth-mocks';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
 
+  let mockAuthService: Partial<AuthService>;
+  let router: Partial<Router>;
+
   beforeEach(async () => {
+    mockAuthService = {
+      register: jest.fn().mockReturnValue(of(void 0)),
+    };
+
     await TestBed.configureTestingModule({
       declarations: [RegisterComponent],
       imports: [
+        RouterTestingModule,
         BrowserAnimationsModule,
         HttpClientModule,
-        ReactiveFormsModule,  
+        ReactiveFormsModule,
         MatCardModule,
         MatFormFieldModule,
         MatIconModule,
-        MatInputModule
-      ]
-    })
-      .compileComponents();
+        MatInputModule,
+      ],
+      providers: [{ provide: AuthService, useValue: mockAuthService }],
+    }).compileComponents();
+
+    router = TestBed.inject(Router);
 
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;
@@ -37,4 +60,32 @@ describe('RegisterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  function submitForm() {
+    component.form.setValue(registerRequest);
+    const form = fixture.debugElement.query(By.css('form'));
+    form.triggerEventHandler('ngSubmit');
+  }
+
+  it('should navigate on Login page if success', () => {
+    //Arrange
+    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+    //Act
+    submitForm();
+    //Check
+    expect(mockAuthService.register).toHaveBeenCalledWith(registerRequest);
+    expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+  });
+
+  it('should set onError flag to true on Error', fakeAsync(() => {
+    //Arrange
+    mockAuthService.register = jest
+      .fn()
+      .mockReturnValueOnce(throwError(() => 'error'));
+    //Act
+    submitForm();
+    flush();
+    //Check
+    expect(component.onError).toBe(true);
+  }));
 });
