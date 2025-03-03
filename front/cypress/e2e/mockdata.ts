@@ -25,8 +25,8 @@ export const sessions = ['session1', 'session2', 'session3'].map(
     date: new Date(),
     teacher_id: 1,
     users: [1, 2],
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: new Date().toISOString().split('T')[0],
+    updatedAt: new Date().toISOString().split('T')[0],
   })
 );
 
@@ -46,6 +46,6 @@ export const teachers = [
   id: index + 1,
   firstName: teacher.firstName,
   lastName: teacher.lastName,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  createdAt: new Date().toISOString().split('T')[0],
+  updatedAt: new Date().toISOString().split('T')[0],
 }));
