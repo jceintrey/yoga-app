@@ -41,3 +41,55 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+import { admin, sessions, teachers } from '../e2e/mockdata';
+
+Cypress.Commands.add('logout', () => {
+  cy.clearCookies();
+  cy.clearLocalStorage();
+});
+
+Cypress.Commands.add('fillSessionForm', (session) => {
+  cy.get('input[formControlName=name]').type(session.name);
+
+  cy.get('input[formControlName=date]').type(session.date);
+  cy.get('mat-select[formControlName=teacher_id]').click();
+
+  cy.get('mat-option')
+    .contains(
+      `${teachers[session.teacher_id].firstName} ${
+        teachers[session.teacher_id].lastName
+      }`
+    )
+    .click();
+  cy.get('textarea[formControlName=description]').type(session.description);
+});
+
+Cypress.Commands.add('login', (user) => {
+  cy.visit('/login');
+
+  cy.intercept('POST', '/api/auth/login', {
+    body: {
+      id: user['id'],
+      email: user['email'],
+      lastName: user['lastName'],
+      firstName: user['firstName'],
+      admin: user['admin'],
+      createdAt: user['createdAt'],
+      updatedAt: user['updatedAt'],
+      password: user['password'],
+    },
+  });
+
+  cy.intercept(
+    {
+      method: 'GET',
+      url: '/api/session',
+    },
+    sessions
+  ).as('session');
+
+  cy.get('input[formControlName=email]').type(user['email']);
+  cy.get('input[formControlName=password]').type(user['password']);
+  cy.get('button[type=submit]').click();
+});
