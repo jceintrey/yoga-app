@@ -15,6 +15,8 @@ export const jdoe = {
   email: 'jdoe@mx.com',
   password: 'test!1234',
   admin: false,
+  createdAt: new Date().toISOString().split('T')[0],
+  updatedAt: new Date().toISOString().split('T')[0],
 };
 
 export const sessions = ['session1', 'session2', 'session3'].map(
