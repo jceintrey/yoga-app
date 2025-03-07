@@ -16,7 +16,9 @@
     <description>The best backend for an Yoga app !</description>
 
     <properties>
+
         <java.version>11</java.version>
+
     </properties>
 
     <dependencies>
@@ -75,6 +77,7 @@
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>1.5.1.Final</version>
+
         </dependency>
 
         <dependency>
@@ -82,6 +85,7 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.1.Final</version>
         </dependency>
+
 
     </dependencies>
 
@@ -107,6 +111,14 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>
+
+                <configuration>
+                    <excludes>
+                        <exclude>**/models/**</exclude>
+                        <exclude>**/dto/**</exclude>
+                    </excludes>
+                </configuration>
+
                 <executions>
                     <execution>
                         <goals>
@@ -145,8 +157,6 @@
 
                 </executions>
             </plugin>
-           
-
         </plugins>
     </build>
 
