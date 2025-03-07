@@ -41,7 +41,7 @@ public class TeacherServiceTest {
     @ParameterizedTest(name = "Id {0} exist={1}")
     @CsvSource({ "1, true", "999, false" })
     @DisplayName("Find By ID")
-    void findById_shouldReturnCorrectTeacher(Long id, boolean exists) {
+    void findById_shouldReturnTeacherOrNullIfNotFound(Long id, boolean exists) {
         logger.info("Test findById avec ID={} (existe={})", id, exists);
         // GIVEN
         Teacher teacher = exists ? new Teacher(id, null, null, null, null) : null;
