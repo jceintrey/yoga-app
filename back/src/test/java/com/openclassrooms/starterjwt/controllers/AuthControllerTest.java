@@ -31,8 +31,6 @@ import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 
-import lombok.extern.slf4j.Slf4j;
-
 @ExtendWith(MockitoExtension.class)
 public class AuthControllerTest {
 
@@ -104,6 +102,7 @@ public class AuthControllerTest {
         assertThat(jwtResponse.getAdmin()).isEqualTo(user.isAdmin());
 
     }
+    
 
     @Test
     @Tag("register")
