@@ -59,9 +59,7 @@ public class SessionServiceTest {
     private static Session getRandomSession() {
         Random random = new Random();
         Long sessionId = Long.valueOf(1 + random.nextInt(1000));
-        // return new Session(sessionId, "Yoga", null, "a yoga session", new Teacher(),
-        // List.of(new User(1L, "jdoe@mx.com", "doe", "john", "test", false, null,
-        // null)), null, null);
+        
         return new Session(sessionId, "Yoga", null, "a yoga session", new Teacher(), new ArrayList<User>(), null, null);
     }
 
