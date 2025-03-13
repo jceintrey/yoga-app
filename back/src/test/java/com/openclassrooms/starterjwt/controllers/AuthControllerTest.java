@@ -31,10 +31,7 @@ import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 
-import lombok.extern.slf4j.Slf4j;
-
 @ExtendWith(MockitoExtension.class)
-@Slf4j
 public class AuthControllerTest {
 
     private LoginRequest loginRequest;
@@ -72,7 +69,6 @@ public class AuthControllerTest {
         loginRequest = new LoginRequest();
         loginRequest.setEmail(userDetails.getUsername());
         loginRequest.setPassword(userDetails.getPassword());
-        log.info("InitEach a chaque test");
 
     }
 
@@ -97,7 +93,6 @@ public class AuthControllerTest {
         // THEN
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         JwtResponse jwtResponse = (JwtResponse) result.getBody();
-        log.info(jwtResponse.getToken());
 
         assertThat(jwtResponse.getToken()).isEqualTo(jwtToken);
         assertThat(jwtResponse.getId()).isEqualTo(user.getId());
@@ -107,6 +102,7 @@ public class AuthControllerTest {
         assertThat(jwtResponse.getAdmin()).isEqualTo(user.isAdmin());
 
     }
+    
 
     @Test
     @Tag("register")

@@ -32,6 +32,7 @@ public class UserDetailsImpl implements UserDetails {
   @JsonIgnore
   private String password;  
   
+  @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {        
       return new HashSet<GrantedAuthority>();
   }

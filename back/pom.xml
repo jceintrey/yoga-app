@@ -85,8 +85,7 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.1.Final</version>
         </dependency>
-
-
+      
     </dependencies>
 
     <build>
@@ -116,6 +115,10 @@
                     <excludes>
                         <exclude>**/models/**</exclude>
                         <exclude>**/dto/**</exclude>
+                        <exclude>**/payload/**</exclude>
+                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/SpringBootSecurityJwtApplication.class</exclude>
+
                     </excludes>
                 </configuration>
 
