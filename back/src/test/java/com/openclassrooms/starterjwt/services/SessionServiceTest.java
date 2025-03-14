@@ -249,7 +249,7 @@ public class SessionServiceTest {
         // GIVEN
         Session expectedSession = SessionServiceTest.getRandomSession();
         Long expectedSessionId = expectedSession.getId();
-        expectedSession.setUsers(new ArrayList<User>());
+        expectedSession.setUsers(new ArrayList<>());
         Long expectedUserId = 1L;
 
         when(sessionRepository.findById(expectedSessionId)).thenReturn(Optional.ofNullable(expectedSession));

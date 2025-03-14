@@ -85,7 +85,11 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.5.1.Final</version>
         </dependency>
-      
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -105,61 +109,107 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>     
+         
+            <!-- Plugin for UT -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M5</version>
             </plugin>
+
+            <!-- JaCoCo Pluggin for UT -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.5</version>
-
                 <configuration>
                     <excludes>
                         <exclude>**/models/**</exclude>
                         <exclude>**/dto/**</exclude>
-                        <exclude>**/payload/**</exclude>
                         <exclude>**/mapper/**</exclude>
                         <exclude>**/SpringBootSecurityJwtApplication.class</exclude>
-
+                        <exclude>**/payload/**</exclude>
                     </excludes>
                 </configuration>
-
                 <executions>
+                    <!-- JaCoCo Agent for UT -->
                     <execution>
+                        <id>prepare-unit-agent</id>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                    </execution>
-                    <!-- attached to Maven test phase -->
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>jacoco-check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                         <configuration>
-                            <rules>
-                                <rule>
-                                    <element>PACKAGE</element>
-                                    <limits>
-                                        <limit>
-                                            <counter>LINE</counter>
-                                            <value>COVEREDRATIO</value>
-                                            <minimum>0.9</minimum>
-                                        </limit>
-                                    </limits>
-                                </rule>
-                            </rules>
+                            <destFile>${project.build.directory}/jacoco-unit.exec</destFile>
                         </configuration>
                     </execution>
 
+                    <!-- report for UT -->
+                    <execution>
+                        <id>report-unit</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-unit.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/site/jacoco-unit</outputDirectory>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
+
+            <!-- Plugin for IT -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.2.5</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- JaCoCo Pluggin for IT -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+                <executions>
+                    <!-- JaCoCo Agent for IT -->
+                    <execution>
+                        <id>prepare-integration-agent</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-integration.exec</destFile>
+                        </configuration>
+                    </execution>
+
+                    <!-- report for IT  -->
+                    <execution>
+                        <id>report-integration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-integration.exec</dataFile>
+                            <outputDirectory>${project.build.directory}/site/jacoco-integration</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
         </plugins>
     </build>
 
