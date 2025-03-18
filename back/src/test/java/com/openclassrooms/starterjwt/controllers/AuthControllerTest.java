@@ -20,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.openclassrooms.starterjwt.models.User;
@@ -38,7 +37,7 @@ public class AuthControllerTest {
 
     private UserDetailsImpl userDetails;
     private User user;
-    private SecurityContext securityContext;
+
 
     @Mock
     private AuthenticationManager authenticationManager;
@@ -61,10 +60,11 @@ public class AuthControllerTest {
     @BeforeEach
     void initEach() {
 
-        user = new User(1L, "jdoe@mx.com", "Doe", "John", "test123", false, LocalDateTime.now(), LocalDateTime.now());
+        user = new User(1L, "jdoe@mx.com", "Doe", "John", "test123", false, LocalDateTime.now(),
+                LocalDateTime.now());
 
-        userDetails = new UserDetailsImpl(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName(),
-                user.isAdmin(), user.getPassword());
+        userDetails = new UserDetailsImpl(user.getId(), user.getEmail(), user.getFirstName(),
+                user.getLastName(), user.isAdmin(), user.getPassword());
 
         loginRequest = new LoginRequest();
         loginRequest.setEmail(userDetails.getUsername());
@@ -79,7 +79,8 @@ public class AuthControllerTest {
         // GIVEN
 
         String userMail = user.getEmail();
-        String jwtToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
+        String jwtToken =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30";
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(authentication);
@@ -102,7 +103,7 @@ public class AuthControllerTest {
         assertThat(jwtResponse.getAdmin()).isEqualTo(user.isAdmin());
 
     }
-    
+
 
     @Test
     @Tag("register")
@@ -128,7 +129,8 @@ public class AuthControllerTest {
         // THEN
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         verify(userRepository).save(any(User.class));
-        assertThat(result.getBody()).extracting("message").asString().contains("User registered successfully!");
+        assertThat(result.getBody()).extracting("message").asString()
+                .contains("User registered successfully!");
 
     }
 
@@ -146,7 +148,8 @@ public class AuthControllerTest {
 
         // THEN
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        assertThat(result.getBody()).extracting("message").asString().contains("Error: Email is already taken!");
+        assertThat(result.getBody()).extracting("message").asString()
+                .contains("Error: Email is already taken!");
 
     }
 }
