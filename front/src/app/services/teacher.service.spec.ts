@@ -23,34 +23,33 @@ describe('TeacherService', () => {
   afterEach(() => {
     httpMock.verify();
   });
-
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should return all teachers', () => {
-    //Arrange
-    const teachers = [mockTeacher];
-    //Act
-    service.all().subscribe((response) => {
-      //Check
-      expect(response).toEqual(teachers);
+  describe('Unit Tests', () => {
+    it('should be created', () => {
+      expect(service).toBeTruthy();
     });
-    const req = httpMock.expectOne('api/teacher');
-    expect(req.request.method).toBe('GET');
-    req.flush(teachers);
-  });
-
-  it('should return teacher detail by their Id', () => {
-    //Arrange
-    const id = String(mockTeacher.id);
-    //Act
-    service.detail(id).subscribe((response) => {
-      //Check
-      expect(response).toEqual(mockTeacher);
+    it('should return all teachers', () => {
+      //Arrange
+      const teachers = [mockTeacher];
+      //Act
+      service.all().subscribe((response) => {
+        //Check
+        expect(response).toEqual(teachers);
+      });
+      const req = httpMock.expectOne('api/teacher');
+      expect(req.request.method).toBe('GET');
+      req.flush(teachers);
     });
-    const req = httpMock.expectOne(`api/teacher/${id}`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockTeacher);
+    it('should return teacher detail by their Id', () => {
+      //Arrange
+      const id = String(mockTeacher.id);
+      //Act
+      service.detail(id).subscribe((response) => {
+        //Check
+        expect(response).toEqual(mockTeacher);
+      });
+      const req = httpMock.expectOne(`api/teacher/${id}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockTeacher);
+    });
   });
 });

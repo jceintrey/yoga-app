@@ -67,34 +67,41 @@ describe('LoginComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+  describe('Unit Tests', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    it('should set error flag to true on error', () => {
+      //Arrange
+      mockAuthService.login = jest
+        .fn()
+        .mockReturnValueOnce(throwError('error'));
+      component.form.setValue(mockLoginRequest);
+      //Act
+      const form = fixture.debugElement.query(By.css('form'));
+      form.triggerEventHandler('ngSubmit');
+
+      fixture.detectChanges();
+      //Check
+      expect(component['onError']).toBe(true);
+    });
   });
-  it('should submit the form and navigate on success', () => {
-    //Arrange
-    component.form.setValue(mockLoginRequest);
-    //Act
-    component.submit();
-    //Check
-    expect(mockAuthService.login).toHaveBeenCalledWith(mockLoginRequest);
 
-    expect(mockSessionService.logIn).toHaveBeenCalledWith(
-      mockSessionInformation
-    );
+  describe('Integration Tests', () => {
+    it('should submit the form and navigate on success', () => {
+      //Arrange
+      component.form.setValue(mockLoginRequest);
+      //Act
+      component.submit();
+      //Check
+      expect(mockAuthService.login).toHaveBeenCalledWith(mockLoginRequest);
 
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/sessions']);
-  });
-  it('should set error flag to true on error', () => {
-    //Arrange
-    mockAuthService.login = jest.fn().mockReturnValueOnce(throwError('error'));
-    component.form.setValue(mockLoginRequest);
-    //Act
-    const form = fixture.debugElement.query(By.css('form'));
-    form.triggerEventHandler('ngSubmit');
+      expect(mockSessionService.logIn).toHaveBeenCalledWith(
+        mockSessionInformation
+      );
 
-    fixture.detectChanges();
-    //Check
-    expect(component['onError']).toBe(true);
+      expect(mockRouter.navigate).toHaveBeenCalledWith(['/sessions']);
+    });
   });
 });
