@@ -8,7 +8,6 @@ import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -17,10 +16,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -60,7 +58,7 @@ public class SessionServiceTest {
         Random random = new Random();
         Long sessionId = Long.valueOf(1 + random.nextInt(1000));
         
-        return new Session(sessionId, "Yoga", null, "a yoga session", new Teacher(), new ArrayList<User>(), null, null);
+        return new Session(sessionId, "Yoga", null, "a yoga session", new Teacher(), new ArrayList<>(), null, null);
     }
 
     @Test

@@ -10,9 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.Logger;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -23,8 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @ExtendWith(MockitoExtension.class)
 public class AuthEntryPointJwtTest {
 
-    @Mock
-    private Logger logger;
 
     @InjectMocks
     private AuthEntryPointJwt authEntryPointJwt;
@@ -39,8 +35,7 @@ public class AuthEntryPointJwtTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
 
-        AuthenticationException authException = new AuthenticationException(errorMessage) {
-        };
+        AuthenticationException authException = new AuthenticationException(errorMessage) {};
         request.setServletPath(path);
 
         // WHEN
@@ -51,8 +46,9 @@ public class AuthEntryPointJwtTest {
         assertThat(response.getContentType()).isEqualTo(MediaType.APPLICATION_JSON_VALUE);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> parsedData = objectMapper.readValue(response.getContentAsString(), Map.class);
-        System.out.println("Objet Java : " + parsedData);
+        Map<String, Object> parsedData =
+                objectMapper.readValue(response.getContentAsString(), Map.class);
+
 
         assertThat(parsedData.get("status")).isEqualTo(HttpServletResponse.SC_UNAUTHORIZED);
         assertThat(parsedData.get("error")).isEqualTo("Unauthorized");

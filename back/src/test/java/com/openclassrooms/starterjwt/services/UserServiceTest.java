@@ -66,7 +66,6 @@ public class UserServiceTest {
     void finById_shouldReturnNullIfNotExist() {
         // GIVEN
         Long id = 999L;
-        User expectedUser = null;
         when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         // WHEN
