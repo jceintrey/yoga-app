@@ -5,21 +5,28 @@ Administrators can create/update/delete sessions.
 Users, after registering, can list/view details/participate/unregister from a session.
 
 1. [Description](#description)
-2. [Installation and Setup](#installation-and-setup)
+2. [Setup](#setup)
 3. [Tests](#tests)
 4. [Contribution and Contact](#contribution-and-contact)
 
 # Description
 
-The Backend is based on Java11 using the SpringBoot Framework.  
-The Frontend uses Angular version 14.
+The application is built in two parts.
+
+First, the Backend is based on Java11 using the SpringBoot Framework.
+Then, the Frontend is based on Angular version 14.
 
 Frontend tests:
 
 - Jest for unit and integration tests
 - Cypress for end-to-end tests
 
-# Installation and Setup
+Backend tests:
+
+- Jest for unit and integration tests
+- Cypress for end-to-end tests
+
+# Setup
 
 ## Prerequisites
 
@@ -62,7 +69,17 @@ mvn clean install
 
 If there is a database connection error, the build will fail. You can skip the database access tests and come back to them later.
 
-### Install and prepare the database
+## Install and prepare the database
+
+Once Mysql Server is installed, you have to configure a RW user for the application and adapt application.properties in back/src/main/resources/ to fit the databasename, username and password.
+⚠️ you should use environment variables for password
+
+```bash
+create database test;
+CREATE USER 'appuser'@'%' IDENTIFIED BY 'heresetastrongpassword';
+GRANT ALL PRIVILEGES ON appuser.* TO 'appuser'@'%';
+flush privileges;
+```
 
 ## Running the application
 
@@ -84,9 +101,33 @@ npm run start
 
 # Tests
 
-The tests are mocked, and the Frontend and Backend tests can be done independently.
+The tests are mocked. The Frontend and Backend tests can be done independently.
 
 ## Backend tests
+
+Backend tests are done using Junit5, Mockito and MockMVC.
+Backend integration tests use H2 database.
+
+### Run Unit tests
+
+```bash
+cd back
+mvn clean test
+```
+
+### Run Unit and Integration tests and coverage reports
+
+```bash
+cd back
+mvn clean verify
+```
+
+### Watch coverage reports
+
+The coverage reports are separated:
+
+- [Integration tests](http://127.0.0.1:5500/back/target/site/jacoco-integration/index.html)
+- [Unit tests](http://127.0.0.1:5500/back/target/site/jacoco-unit/index.html)
 
 ## Frontend tests
 
@@ -139,10 +180,18 @@ Yoga-app is a project offered by OpenClassrooms as part of the Full-stack Java A
 
 # Screenshots
 
-### Cypress E2E Coverage
+### Cypress E2E Coverage (Front)
 
 <img src="ressources/screenshots/front-e2e-coverage-report.png" alt="Cypress-e2e" height="300" />
 
-### Jest ITG Unit Coverage
+### Jest ITG Unit Coverage (Front)
 
 <img src="ressources/screenshots/front-unit-itg-coverage.png" alt="Jest-itg-unit" height="300" />
+
+### Junit and Mockito unit tests (Back)
+
+<img src="ressources/screenshots/back-unit-report.png" alt="Back unit reports" height="300" />
+
+### Junit and MockMVC integration tests (Back)
+
+<img src="ressources/screenshots/back-itg-report.png" alt="Back integration reports" height="300" />
