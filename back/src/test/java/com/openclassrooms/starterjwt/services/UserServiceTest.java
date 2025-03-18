@@ -19,7 +19,6 @@ import com.openclassrooms.starterjwt.models.User;
 import com.openclassrooms.starterjwt.repository.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
-
 public class UserServiceTest {
     private static final Logger logger = LoggerFactory.getLogger(TeacherServiceTest.class);
 
@@ -59,7 +58,7 @@ public class UserServiceTest {
 
         // THEN
         verify(userRepository).findById(id);
-        assertThat(actualUser).isNotNull();
+        assertThat(actualUser).as("Is not null").isNotNull();
         assertThat(actualUser).isEqualTo(expectedUser);
     }
 

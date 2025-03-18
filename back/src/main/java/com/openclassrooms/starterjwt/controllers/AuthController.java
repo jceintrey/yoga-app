@@ -23,19 +23,20 @@ import com.openclassrooms.starterjwt.repository.UserRepository;
 import com.openclassrooms.starterjwt.security.jwt.JwtUtils;
 import com.openclassrooms.starterjwt.security.services.UserDetailsImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
+@Slf4j
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
-    AuthController(AuthenticationManager authenticationManager,
-            PasswordEncoder passwordEncoder,
-            JwtUtils jwtUtils,
-            UserRepository userRepository) {
+    AuthController(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder,
+            JwtUtils jwtUtils, UserRepository userRepository) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.passwordEncoder = passwordEncoder;
@@ -44,10 +45,12 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        log.info("authenticationdeb: ");
+        Authentication authentication =
+                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
+        log.info("authenticationdeb: " + authentication.toString());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -58,27 +61,21 @@ public class AuthController {
             isAdmin = user.isAdmin();
         }
 
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                userDetails.getFirstName(),
-                userDetails.getLastName(),
-                isAdmin));
+        return ResponseEntity
+                .ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
+                        userDetails.getFirstName(), userDetails.getLastName(), isAdmin));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
+            return ResponseEntity.badRequest()
                     .body(new MessageResponse("Error: Email is already taken!"));
         }
 
         // Create new user's account
-        User user = new User(signUpRequest.getEmail(),
-                signUpRequest.getLastName(),
-                signUpRequest.getFirstName(),
-                passwordEncoder.encode(signUpRequest.getPassword()),
+        User user = new User(signUpRequest.getEmail(), signUpRequest.getLastName(),
+                signUpRequest.getFirstName(), passwordEncoder.encode(signUpRequest.getPassword()),
                 false);
 
         userRepository.save(user);
