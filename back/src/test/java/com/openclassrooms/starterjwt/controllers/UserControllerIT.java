@@ -6,10 +6,10 @@ import java.util.HashMap;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -27,7 +27,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @ActiveProfiles("test")
 @Sql(scripts = {"/init.sql"}, executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @TestPropertySource("classpath:application-test.properties")
-@EntityScan(basePackages = "com.openclassrooms.starterjwt.models")
 public class UserControllerIT {
     @Autowired
     private MockMvc mockMvc;
@@ -48,7 +47,6 @@ public class UserControllerIT {
         userId = "1";
         assertThat(userId).isNotEmpty();
 
-        // test token generation
         token = Jwts.builder().setClaims(new HashMap<>()).setSubject(userEmail)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3600000))
@@ -56,8 +54,11 @@ public class UserControllerIT {
     }
 
 
+    // Some happy path tests
+
     @Test
-    @DisplayName("@GetMapping(\"/{id}\")")
+    @Tag("user")
+    @DisplayName("GET /user/{id} - Should return user details for existing userId")
     void get_shouldReturnUserWhenExistingId() throws Exception {
         // GIVEN
 
@@ -68,7 +69,8 @@ public class UserControllerIT {
     }
 
     @Test
-    @DisplayName("@DeleteMapping(\"{id}\")")
+    @Tag("user")
+    @DisplayName("DELETE /user/{id} - Should delete existing user")
     void delete_shouldDeleteExistingUser() throws Exception {
         // GIVEN
 
@@ -80,8 +82,11 @@ public class UserControllerIT {
 
     }
 
+    // Some edge case tests
+
     @Test
-    @DisplayName("@DeleteMapping(\"{id}\") should return Httpstatus NotFound when the userId does not exist ")
+    @Tag("user")
+    @DisplayName("DELETE /user/{id} - Should return NotFound when userId does not exist")
     void delete_shouldReturnNotFoundWhenDeleteNonExistingUser() throws Exception {
         // GIVEN
         String id = "10";
@@ -92,7 +97,8 @@ public class UserControllerIT {
     }
 
     @Test
-    @DisplayName("@DeleteMapping(\"{id}\") should return Httpstatus NotFound when the user to delete is not the authenticated user")
+    @Tag("user")
+    @DisplayName("DELETE /user/{id} - Should return Unauthorized when deleting another user")
     void delete_shouldReturnUnauthorizedWhenDeleteAnotherUser() throws Exception {
         // GIVEN
         String id = "2";

@@ -1,3 +1,4 @@
+
 DROP TABLE IF EXISTS `PARTICIPATE`;
 DROP TABLE IF EXISTS `SESSIONS`;
 DROP TABLE IF EXISTS `TEACHERS`;
@@ -41,12 +42,11 @@ ALTER TABLE `SESSIONS` ADD FOREIGN KEY (`teacher_id`) REFERENCES `TEACHERS` (`id
 ALTER TABLE `PARTICIPATE` ADD FOREIGN KEY (`user_id`) REFERENCES `USERS` (`id`);
 ALTER TABLE `PARTICIPATE` ADD FOREIGN KEY (`session_id`) REFERENCES `SESSIONS` (`id`);
 
-
-INSERT INTO USERS (id, email, first_name, last_name, password, admin) VALUES (1, 'jdoe@mx.com', 'John', 'Doe', 'test123',true);
-INSERT INTO USERS (id, email, first_name, last_name, password) VALUES (2, 'jsmith@mx.com', 'John', 'Smith', 'test123');
+INSERT INTO USERS (id, email, first_name, last_name, password, admin) VALUES (1, 'jdoe@mx.com', 'John', 'Doe', '$2a$10$gt3kCqD91prrb79zoSjig..aoDPHbXyDYJvqvn7oBaMQ/tdrAAgbW',true);
+INSERT INTO USERS (id, email, first_name, last_name, password) VALUES (2, 'jsmith@mx.com', 'John', 'Smith', '$2a$10$gt3kCqD91prrb79zoSjig..aoDPHbXyDYJvqvn7oBaMQ/tdrAAgbW');
 INSERT INTO TEACHERS (id, last_name, first_name) VALUES (1, 'Willis', 'Bruce');
 INSERT INTO TEACHERS (id, last_name, first_name) VALUES (2, 'Carrey', 'Jim');
-INSERT INTO SESSIONS (id, name, description, teacher_id) VALUES (1, 'Yoga Session', 'This is a yoga session', 1);
-INSERT INTO SESSIONS (id, name, description, teacher_id) VALUES (2, 'Another Yoga Session', 'This is another yoga session', 2);
+INSERT INTO SESSIONS (id, name, description, date, teacher_id) VALUES (1, 'Yoga Session', 'This is a yoga session',CURRENT_TIMESTAMP, 1);
+INSERT INTO SESSIONS (id, name, description, date, teacher_id) VALUES (2, 'Another Yoga Session', 'This is another yoga session',CURRENT_TIMESTAMP, 2);
 INSERT INTO PARTICIPATE (user_id,session_id) VALUES (2,2);
 
