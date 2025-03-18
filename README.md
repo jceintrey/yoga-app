@@ -150,6 +150,27 @@ The HTML coverage report is generated in front/coverage/jest/lcov-report/, acces
 [Jest Coverage Report](ressources/screenshots/front-unit-itg-coverage.png)  
 An HTML test report is also available here: front/reports/test-report.html
 
+Here is a summary with ratio
+
+
+| Test File                          | Unit Tests | Integration Tests |
+|-------------------------------------|------------|------------------|
+| register.component.spec.ts         | 2          | 1                |
+| auth.service.spec.ts               | 0          | 2                |
+| detail.component.spec.ts           | 2          | 4                |
+| form.component.spec.ts             | 3          | 3                |
+| list.component.spec.ts             | 1          | 0                |
+| session-api.service.spec.ts        | 7          | 0                |
+| session.service.spec.ts            | 2          | 0                |
+| teacher.service.spec.ts            | 3          | 0                |
+| user.service.spec.ts               | 3          | 0                |
+| app.component.spec.ts              | 2          | 1                |
+| me.component.spec.ts               | 2          | 1                |
+| not-found.component.spec.ts        | 1          | 0                |
+| login.component.spec.ts            | 2          | 1                |
+| **Sub total**                      | **30**     | **13**           |
+| **Ratio**                          | **70%**    | **30%**          |
+| **Total**                          | **43**     |                  |
 ### End-to-end tests
 
 ```bash

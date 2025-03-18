@@ -73,28 +73,32 @@ describe('MeComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  describe('Unit Tests', () => {
+    it('should create', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('should fetch user data on init', () => {
+      //Act and Check
+      expect(userService.getById).toHaveBeenCalledWith('1');
+      expect(component.user).toEqual(mockUser);
+    });
   });
 
-  it('should fetch user data on init', () => {
-    //Act and Check
-    expect(userService.getById).toHaveBeenCalledWith('1');
-    expect(component.user).toEqual(mockUser);
-  });
+  describe('Integration Tests', () => {
+    it('should delete user and log out', () => {
+      //Act
+      component.delete();
+      //Check
+      expect(userService.delete).toHaveBeenCalledWith('1');
 
-  it('should delete user and log out', () => {
-    //Act
-    component.delete();
-    //Check
-    expect(userService.delete).toHaveBeenCalledWith('1');
-
-    expect(snackBar.open).toHaveBeenCalledWith(
-      'Your account has been deleted !',
-      'Close',
-      { duration: 3000 }
-    );
-    expect(sessionService.logOut).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/']);
+      expect(snackBar.open).toHaveBeenCalledWith(
+        'Your account has been deleted !',
+        'Close',
+        { duration: 3000 }
+      );
+      expect(sessionService.logOut).toHaveBeenCalled();
+      expect(router.navigate).toHaveBeenCalledWith(['/']);
+    });
   });
 });

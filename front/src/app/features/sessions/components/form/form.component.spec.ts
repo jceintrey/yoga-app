@@ -23,7 +23,9 @@ import {
 
 import { mockSession } from '../../../../mockdata/session-mocks';
 import { mockSessionService } from 'src/app/mockdata/global-mocks';
+
 import { AppComponent } from 'src/app/app.component';
+import { TeacherService } from 'src/app/services/teacher.service';
 
 describe('FormComponent', () => {
   let component: FormComponent;
@@ -52,7 +54,7 @@ describe('FormComponent', () => {
         MatSelectModule,
       ],
       providers: [
-        { provide: SessionService, useValue: mockSessionService },
+        { provide: SessionService, useValue: mockSessionService },   
         SessionApiService,
       ],
       declarations: [FormComponent],
@@ -67,72 +69,98 @@ describe('FormComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
+  describe('Unit Tests', () => {
+    it('should create the component', () => {
+      expect(component).toBeTruthy();
+    });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should  navigate to sessions when admin is false', () => {
-    // Arrange
-    const navigateSpy = jest.spyOn(router, 'navigate');
-    mockSessionService.sessionInformation.admin = false;
-
-    ngZone.run(() => {
+    it('should  navigate to sessions when admin is false', () => {
       // Arrange
-      component.ngOnInit();
-      //Check
-      expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
+      const navigateSpy = jest.spyOn(router, 'navigate');
+      mockSessionService.sessionInformation.admin = false;
+
+      ngZone.run(() => {
+        // Arrange
+        component.ngOnInit();
+        //Check
+        expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
+      });
     });
-  });
 
-  it('should call initForm with details when the route contains update', () => {
-    //Arrange
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
-
-    const id = '1';
-    jest.spyOn(router, 'url', 'get').mockReturnValue('update');
-    jest.spyOn(activatedRoute.snapshot.paramMap, 'get').mockReturnValue(id);
-
-    jest.spyOn(sessionApiService, 'detail').mockReturnValue(of(mockSession));
-
-    ngZone.run(() => {
+    it('should create empty sessionForm when the route is created', () => {
       //Act
       component.ngOnInit();
-      //check
-      expect(component.onUpdate).toBe(true);
-      expect(component['id']).toBe(id);
-
-      if (component.sessionForm) {
-        expect(component.sessionForm.get('name')?.value).toEqual(
-          mockSession.name
-        );
-      } else throw new Error('sessionForm is undefined');
+      //Check
+      expect(component.sessionForm).toBeTruthy();
+      expect(component.sessionForm?.get('name')?.value).toEqual('');
+      expect(component.sessionForm?.get('date')?.value).toEqual('');
+      expect(component.sessionForm?.get('teacher_id')?.value).toEqual('');
+      expect(component.sessionForm?.get('description')?.value).toEqual('');
     });
   });
+  describe('Integration Tests', () => {
+    it('should call initForm with details when the route contains update', () => {
+      //Arrange
+      const navigateSpy = jest
+        .spyOn(router, 'navigate')
+        .mockResolvedValue(true);
 
-  it('should create empty sessionForm when the route is created', () => {
-    //Act
-    component.ngOnInit();
-    //Check
-    expect(component.sessionForm).toBeTruthy();
-    expect(component.sessionForm?.get('name')?.value).toEqual('');
-    expect(component.sessionForm?.get('date')?.value).toEqual('');
-    expect(component.sessionForm?.get('teacher_id')?.value).toEqual('');
-    expect(component.sessionForm?.get('description')?.value).toEqual('');
-  });
+      const id = '1';
+      jest.spyOn(router, 'url', 'get').mockReturnValue('update');
+      jest.spyOn(activatedRoute.snapshot.paramMap, 'get').mockReturnValue(id);
 
-  it('should submit session Form values when onUpdate', () => {
-    //Arrange
-    component.onUpdate = true;
-    component['id'] = '1';
+      jest.spyOn(sessionApiService, 'detail').mockReturnValue(of(mockSession));
 
-    ngZone.run(() => {
-      //Act
-      component.submit();
-      //Check
-      const req = httpMock.expectOne('api/session/1');
-      expect(req.request.method).toEqual('PUT');
-      req.flush(mockSession);
+      ngZone.run(() => {
+        //Act
+        component.ngOnInit();
+        //check
+        expect(component.onUpdate).toBe(true);
+        expect(component['id']).toBe(id);
+
+        if (component.sessionForm) {
+          expect(component.sessionForm.get('name')?.value).toEqual(
+            mockSession.name
+          );
+        } else throw new Error('sessionForm is undefined');
+      });
+    });
+    it('should submit session Form values and call sessionApiService.update when onUpdate', () => {
+      //Arrange
+      component.onUpdate = true;
+      component['id'] = '1';
+
+      ngZone.run(() => {
+        //Act
+        component.submit();
+        //Check
+        const req = httpMock.expectOne('api/session/1');
+        expect(req.request.method).toEqual('PUT');
+        req.flush(mockSession);
+      });
+    });
+    it('should submit session Form values and call sessionApiService.create when not onUpdate', () => {
+      //Arrange
+      component.onUpdate = false;
+      component['id'] = '1';
+      const navigateSpy = jest.spyOn(router, 'navigate');
+
+      ngZone.run(() => {
+        //Act
+        component.submit();
+        //Check
+        const reqSession = httpMock.expectOne('api/session');
+        const reqTeacher = httpMock.expectOne('api/teacher');
+
+        expect(reqTeacher.request.method).toEqual('GET');
+        expect(reqSession.request.method).toEqual('POST');
+        
+        reqTeacher.flush(mockSession);
+        reqSession.flush(mockSession);
+        
+        expect(navigateSpy).toHaveBeenCalledWith(['sessions']);
+
+      });
     });
   });
 });

@@ -30,26 +30,35 @@ describe('AppComponent', () => {
     router = TestBed.inject(Router);
   });
 
-  it('should create the app', () => {
-    expect(app).toBeTruthy();
-  });
+  describe('Unit Tests', () => {
+    it('should create the app', () => {
+      expect(app).toBeTruthy();
+    });
+    it('should return is logged as a boolean Observable', () => {
+      //Arrange
+      jest.spyOn(sessionService, '$isLogged').mockReturnValue(of(true));
+      //Act and check
+      app.$isLogged().subscribe((isLogged) => expect(isLogged).toBe(true));
+    });
+  })
 
-  it('should return is logged as a boolean Observable', () => {
-    //Arrange
-    jest.spyOn(sessionService, '$isLogged').mockReturnValue(of(true));
-    //Act and check
-    app.$isLogged().subscribe((isLogged) => expect(isLogged).toBe(true));
-  });
+  describe('Integration Tests', () => {
+    it('should logout and navigate to root path', async () => {
+      //Arrange
+      const logoutSpy = jest.spyOn(sessionService, 'logOut');
+      const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
+      //Act
+      await app.logout();
+      await fixture.whenStable();
+      //Check
+      expect(logoutSpy).toHaveBeenCalled();
+      expect(navigateSpy).toHaveBeenCalledWith(['']);
+    });
 
-  it('should logout and navigate to root path', async () => {
-    //Arrange
-    const logoutSpy = jest.spyOn(sessionService, 'logOut');
-    const navigateSpy = jest.spyOn(router, 'navigate').mockResolvedValue(true);
-    //Act
-    await app.logout();
-    await fixture.whenStable();
-    //Check
-    expect(logoutSpy).toHaveBeenCalled();
-    expect(navigateSpy).toHaveBeenCalledWith(['']);
-  });
+  })
+
+
+  
+
+
 });

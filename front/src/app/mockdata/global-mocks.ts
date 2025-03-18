@@ -16,6 +16,9 @@ export const mockSessionInformation: SessionInformation = {
   export const mockSessionService = {
      sessionInformation: mockSessionInformation,
    };
+   export const mockTeacherService = {
+    sessionInformation: mockSessionInformation,
+  };
 
   
  export const mockTeacher: Teacher = {

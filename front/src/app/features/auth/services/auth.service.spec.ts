@@ -27,26 +27,28 @@ describe('Authservice', () => {
     httpMock.verify();
   });
 
-  it('should register a user', () => {
-    //Act and Check
-    service.register(registerRequest).subscribe((response) => {
-      expect(response).toBeUndefined();
-    });
-    const req = httpMock.expectOne('api/auth/register');
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(registerRequest);
-    req.flush(null);
-  });
-
-  it('should login a user', () => {
-    //Act and Check
-    service.login(mockLoginRequest).subscribe((response) => {
-      expect(response).toEqual(mockSessionInformation);
+  describe('Integration Tests', () => {
+    it('should register a user', () => {
+      //Act and Check
+      service.register(registerRequest).subscribe((response) => {
+        expect(response).toBeUndefined();
+      });
+      const req = httpMock.expectOne('api/auth/register');
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(registerRequest);
+      req.flush(null);
     });
 
-    const req = httpMock.expectOne('api/auth/login');
-    expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(mockLoginRequest);
-    req.flush(mockSessionInformation);
+    it('should login a user', () => {
+      //Act and Check
+      service.login(mockLoginRequest).subscribe((response) => {
+        expect(response).toEqual(mockSessionInformation);
+      });
+
+      const req = httpMock.expectOne('api/auth/login');
+      expect(req.request.method).toBe('POST');
+      expect(req.request.body).toEqual(mockLoginRequest);
+      req.flush(mockSessionInformation);
+    });
   });
 });

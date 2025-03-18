@@ -22,35 +22,36 @@ describe('UserService', () => {
   afterEach(() => {
     httpMock.verify();
   });
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
-
-  it('should return user by their Id', () => {
-    //Arrange
-    const id = '1';
-    //Act
-    service.getById(id).subscribe((response) => {
-      //Check
-      expect(response).toEqual(mockUser);
+  describe('Unit Tests', () => {
+    it('should be created', () => {
+      expect(service).toBeTruthy();
     });
+    it('should return user by their Id', () => {
+      //Arrange
+      const id = '1';
+      //Act
+      service.getById(id).subscribe((response) => {
+        //Check
+        expect(response).toEqual(mockUser);
+      });
 
-    const req = httpMock.expectOne(`api/user/${id}`);
-    expect(req.request.method).toBe('GET');
-    req.flush(mockUser);
-  });
-  it('should delete user by their Id', () => {
-    //Arrange
-    const id = '1';
-    const response = '{}';
-    //Act
-    service.delete(id).subscribe((response) => {
-      //Check
-      expect(response).toEqual(response);
+      const req = httpMock.expectOne(`api/user/${id}`);
+      expect(req.request.method).toBe('GET');
+      req.flush(mockUser);
     });
+    it('should delete user by their Id', () => {
+      //Arrange
+      const id = '1';
+      const response = '{}';
+      //Act
+      service.delete(id).subscribe((response) => {
+        //Check
+        expect(response).toEqual(response);
+      });
 
-    const req = httpMock.expectOne(`api/user/${id}`);
-    expect(req.request.method).toBe('DELETE');
-    req.flush(response);
+      const req = httpMock.expectOne(`api/user/${id}`);
+      expect(req.request.method).toBe('DELETE');
+      req.flush(response);
+    });
   });
 });
