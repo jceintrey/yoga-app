@@ -124,9 +124,10 @@
                     <excludes>
                         <exclude>**/models/**</exclude>
                         <exclude>**/dto/**</exclude>
-                        <exclude>**/mapper/**</exclude>
+                        <exclude>**/target/**</exclude>
                         <exclude>**/SpringBootSecurityJwtApplication.class</exclude>
                         <exclude>**/payload/**</exclude>
+                        <exclude>**/mapper/*MapperImpl.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
