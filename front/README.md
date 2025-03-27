@@ -108,14 +108,12 @@ And for the coverage report
 npm run e2e:coverage
 ```
 
-[Cypress Coverage Report](ressources/screenshots/front-e2e-coverage-report.png)
-
 # Screenshots
 
 ### Cypress E2E Coverage (Front)
 
-<img src="ressources/screenshots/front-e2e-coverage-report.png" alt="Cypress-e2e" height="300" />
+<img src="resources/screenshots/front-e2e-coverage-report.png" alt="Cypress-e2e" height="300" />
 
 ### Jest ITG Unit Coverage (Front)
 
-<img src="ressources/screenshots/front-unit-itg-coverage.png" alt="Jest-itg-unit" height="300" />
+<img src="resources/screenshots/front-unit-itg-coverage.png" alt="Jest-itg-unit" height="300" />
